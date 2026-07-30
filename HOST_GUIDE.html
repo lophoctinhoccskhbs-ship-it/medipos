@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPOS - Hướng Dẫn Host Online</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 { color: #0066cc; margin-bottom: 30px; text-align: center; }
+        h2 { color: #0066cc; margin-top: 30px; margin-bottom: 15px; }
+        h3 { color: #0052a3; margin-top: 20px; margin-bottom: 10px; }
+        .method { 
+            background: #f5f7fa;
+            border-left: 4px solid #0066cc;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .step { margin: 15px 0; padding-left: 30px; position: relative; }
+        .step:before {
+            content: attr(data-step);
+            position: absolute;
+            left: 0;
+            background: #0066cc;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New';
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .success {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        button:hover { background: #0052a3; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th { background: #f5f7fa; }
+        .footer { text-align: center; margin-top: 30px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Hướng Dẫn Host MediPOS Online</h1>
+
+        <div class="highlight">
+            <strong>💡 Tư Vấn:</strong> Nếu bạn chỉ muốn dùng trên 1-2 máy tính, không cần host. Mở file index.html trực tiếp là được!
+        </div>
+
+        <h2>🎯 Lợi Ích Khi Host Online</h2>
+        <ul>
+            <li>✅ Truy cập từ bất kỳ máy tính nào</li>
+            <li>✅ Nhân viên dùng chung 1 cơ sở dữ liệu</li>
+            <li>✅ Dữ liệu đồng bộ realtime</li>
+            <li>✅ Chia sẻ link cho khách hàng (nếu muốn)</li>
+            <li>✅ Khôi phục dự phòng tự động</li>
+        </ul>
+
+        <h2>📊 So Sánh Các Cách HOST</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cách Thức</th>
+                    <th>Chi Phí</th>
+                    <th>Độ Khó</th>
+                    <th>Tốc Độ</th>
+                    <th>Đề Xuất</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Localhost (Python/Node)</td>
+                    <td>Miễn Phí</td>
+                    <td>Dễ</td>
+                    <td>Rất nhanh</td>
+                    <td>🌟🌟🌟 Công ty nhỏ</td>
+                </tr>
+                <tr>
+                    <td>GitHub Pages</td>
+                    <td>Miễn Phí</td>
+                    <td>Trung bình</td>
+                    <td>Nhanh</td>
+                    <td>🌟🌟🌟 Cơ bản</td>
+                </tr>
+                <tr>
+                    <td>Netlify</td>
+                    <td>Miễn Phí/Trả phí</td>
+                    <td>Dễ</td>
+                    <td>Nhanh</td>
+                    <td>🌟🌟🌟🌟 Tốt nhất</td>
+                </tr>
+                <tr>
+                    <td>Vercel</td>
+                    <td>Miễn Phí/Trả phí</td>
+                    <td>Dễ</td>
+                    <td>Rất nhanh</td>
+                    <td>🌟🌟🌟🌟 Tối ưu</td>
+                </tr>
+                <tr>
+                    <td>VPS/Hosting</td>
+                    <td>Có phí</td>
+                    <td>Khó</td>
+                    <td>Tùy</td>
+                    <td>🌟🌟 Công ty lớn</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- CÁCH 1: LOCALHOST -->
+        <div class="method">
+            <h3>1️⃣ LOCALHOST - HOST TRÊN MÁY TÍNH (Dễ Nhất)</h3>
+            
+            <h4>👉 Cách 1A: Dùng Python (Nếu cài Python)</h4>
+            <div class="step" data-step="1">
+                Mở Command Prompt (Windows) hoặc Terminal (Mac/Linux)
+            </div>
+            <div class="step" data-step="2">
+                Cd tới thư mục MediPOS:
+                <pre>cd C:\Users\YourName\OneDrive\Tài liệu\HTML</pre>
+            </div>
+            <div class="step" data-step="3">
+                Chạy web server Python:
+                <pre>python -m http.server 8000</pre>
+            </div>
+            <div class="step" data-step="4">
+                Mở browser và vào:
+                <pre>http://localhost:8000</pre>
+            </div>
+            <div class="success">
+                ✅ Sẵn sàng! Chia sẻ URL http://localhost:8000 với máy tính khác trên cùng mạng
+            </div>
+
+            <h4>👉 Cách 1B: Dùng Node.js (Nếu cài Node)</h4>
+            <div class="step" data-step="1">
+                Cài serve globally:
+                <pre>npm install -g serve</pre>
+            </div>
+            <div class="step" data-step="2">
+                Cd tới thư mục:
+                <pre>cd C:\Users\YourName\OneDrive\Tài liệu\HTML</pre>
+            </div>
+            <div class="step" data-step="3">
+                Chạy:
+                <pre>serve</pre>
+            </div>
+            <div class="step" data-step="4">
+                Truy cập URL hiển thị trên màn hình
+            </div>
+        </div>
+
+        <!-- CÁCH 2: GITHUB PAGES -->
+        <div class="method">
+            <h3>2️⃣ GITHUB PAGES - Host Miễn Phí (Nên Chọn)</h3>
+            
+            <div class="step" data-step="1">
+                Tạo tài khoản GitHub tại <code>github.com</code> (nếu chưa có)
+            </div>
+            <div class="step" data-step="2">
+                Tạo repository mới tên: <code>medipos</code>
+            </div>
+            <div class="step" data-step="3">
+                Clone repository:
+                <pre>git clone https://github.com/your-username/medipos.git</pre>
+            </div>
+            <div class="step" data-step="4">
+                Copy tất cả file MediPOS vào thư mục vừa clone
+            </div>
+            <div class="step" data-step="5">
+                Commit và push:
+                <pre>git add .
+git commit -m "Initial commit"
+git push origin main</pre>
+            </div>
+            <div class="step" data-step="6">
+                Vào Settings → Pages → Chọn main branch → Save
+            </div>
+            <div class="success">
+                ✅ Url: https://your-username.github.io/medipos
+            </div>
+        </div>
+
+        <!-- CÁCH 3: NETLIFY -->
+        <div class="method">
+            <h3>3️⃣ NETLIFY - Host Miễn Phí, Dễ Nhất (Khuyến Cáo)</h3>
+            
+            <div class="step" data-step="1">
+                Vào <code>netlify.com</code> và đăng ký tài khoản (có thể dùng GitHub login)
+            </div>
+            <div class="step" data-step="2">
+                Nhấp "Create a new site" → "Deploy manually"
+            </div>
+            <div class="step" data-step="3">
+                Drag & drop toàn bộ folder MediPOS vào vùng upload
+            </div>
+            <div class="step" data-step="4">
+                Chờ deploy xong (30 giây)
+            </div>
+            <div class="success">
+                ✅ Sẵn sàng! Nhận URL public để chia sẻ
+            </div>
+
+            <h4>💡 Cập nhật file:</h4>
+            <pre>1. Sửa file trên máy
+2. Quay lại Netlify
+3. Drag & drop thư mục để update
+4. Hoặc sử dụng CLI: npm install -g netlify-cli
+   Sau đó: netlify deploy</pre>
+        </div>
+
+        <!-- CÁCH 4: VERCEL -->
+        <div class="method">
+            <h3>4️⃣ VERCEL - Host Siêu Nhanh (Cao Cấp)</h3>
+            
+            <div class="step" data-step="1">
+                Vào <code>vercel.com</code> và đăng ký (GitHub login tốt nhất)
+            </div>
+            <div class="step" data-step="2">
+                Import project từ GitHub hoặc upload folder
+            </div>
+            <div class="step" data-step="3">
+                Chỉnh cấu hình (để mặc định, ấn Deploy)
+            </div>
+            <div class="success">
+                ✅ Nhận URL: https://medipos-abc123.vercel.app
+            </div>
+
+            <h4>💡 Tự động deploy:</h4>
+            <pre>Mỗi lần bạn push code lên GitHub
+Vercel sẽ tự động deploy (vô cùng tiện!)</pre>
+        </div>
+
+        <!-- CÁCH 5: VPS/HOSTING RIÊNG -->
+        <div class="method">
+            <h3>5️⃣ VPS/HOSTING RIÊNG - Chuyên Nghiệp (Nâng Cao)</h3>
+            
+            <h4>🖥️ Các nhà cung cấp phổ biến:</h4>
+            <ul>
+                <li><strong>Việt Nam:</strong> TopHost, VHOST, GOV.VN</li>
+                <li><strong>Quốc tế:</strong> DigitalOcean, Linode, AWS, Google Cloud</li>
+            </ul>
+
+            <h4>📋 Quy trình cơ bản:</h4>
+            <div class="step" data-step="1">
+                Thuê VPS hoặc hosting
+            </div>
+            <div class="step" data-step="2">
+                Cấu hình domain name
+            </div>
+            <div class="step" data-step="3">
+                Setup web server (Apache/Nginx)
+            </div>
+            <div class="step" data-step="4">
+                Upload file via FTP/SFTP
+            </div>
+            <div class="step" data-step="5">
+                Cấu hình SSL (HTTPS)
+            </div>
+
+            <div class="highlight">
+                ⚠️ Túy chỉnh để có database backend
+            </div>
+        </div>
+
+        <!-- HƯỚNG DẪN SỬ DỤNG URL -->
+        <h2>🔗 Sau Khi Có URL</h2>
+        
+        <h3>Chia Sẻ Với Nhân Viên</h3>
+        <pre>Ví dụ URL: https://medipos-mystore.netlify.app
+
+Send Telegram/Email/SMS:
+"Bạn vào link này để bán hàng: https://medipos-mystore.netlify.app"
+
+Họ có thể:
+✓ Mở trên máy tính
+✓ Mở trên điện thoại
+✓ Dùng bất kỳ trình duyệt nào
+✓ Không cần cài đặt gì</pre>
+
+        <h3>✅ Kiểm Tra Hoạt Động</h3>
+        <ul>
+            <li>Mở URL trên 2 máy tính khác nhau</li>
+            <li>Làm giao dịch trên máy 1</li>
+            <li>Xem máy 2 có cập nhật không?</li>
+            <li>🚨 LƯU Ý: Data hiện tại CHƯA đồng bộ realtime (cần backend để thực hiện)</li>
+        </ul>
+
+        <!-- NÂNG CAO -->
+        <h2>🚀 Nâng Cao: Thêm Backend (Tùy Chọn)</h2>
+        
+        <div class="highlight">
+            <strong>💡 Điều này giúp:</strong>
+            <ul>
+                <li>✓ Lưu dữ liệu trên server (không bị mất)</li>
+                <li>✓ Đồng bộ data 100% realtime giữa các máy</li>
+                <li>✓ Tạo account/password cho nhân viên</li>
+                <li>✓ Lịch sử chi tiết và audit log</li>
+            </ul>
+        </div>
+
+        <h3>🔧 Yêu cầu backend:</h3>
+        <pre>Thay LocalStorage bằng API calls:
+
+Ví dụ cũ: dataManager.addProduct(product)
+         → Lưu vào localStorage
+
+Ví dụ mới: fetch('/api/products', {
+    method: 'POST',
+    body: JSON.stringify(product)
+})</pre>
+
+        <h3>💰 Giải pháp sẵn có:</h3>
+        <ul>
+            <li><strong>Firebase:</strong> Setup dễ, rẻ, phù hợp</li>
+            <li><strong>Supabase:</strong> PostgreSQL + realtime</li>
+            <li><strong>Node.js + MongoDB:</strong> Tự code, linh hoạt</li>
+            <li><strong>Python + Flask/Django:</strong> Bền vững</li>
+        </ul>
+
+        <!-- TROUBLESHOOTING -->
+        <h2>🆘 Xử Lý Sự Cố</h2>
+
+        <h3>❌ "Không thể mở file"</h3>
+        <ul>
+            <li>✓ Kiểm tra tất cả file .js, .css trong cùng thư mục</li>
+            <li>✓ Không nên mở qua UNC path (\\server\share)</li>
+            <li>✓ Dùng http:// hoặc file:/// path thay vì drag file</li>
+        </ul>
+
+        <h3>❌ "Localhost từ chối kết nối"</h3>
+        <ul>
+            <li>✓ Kiểm tra port 8000 có bị dùng không: lsof -i :8000</li>
+            <li>✓ Thử port khác: python -m http.server 9000</li>
+            <li>✓ Tắt firewall tạm thời</li>
+        </ul>
+
+        <h3>❌ "Data mất sau deploy"</h3>
+        <ul>
+            <li>✓ Dữ liệu lưu ở browser localStorage → reload page vẫn có</li>
+            <li>✓ Khi đổi máy → backup + restore JSON</li>
+            <li>✓ Cần backend database nếu muốn chia sẻ data</li>
+        </ul>
+
+        <!-- CHỌN GIẢI PHÁP -->
+        <h2>✨ Đề Xuất Cho Bạn</h2>
+
+        <h3>1️⃣ Công ty nhỏ (1-3 máy):</h3>
+        <pre>👉 Localhost + Python
+   Hoặc: Mở file trực tiếp trên mỗi máy</pre>
+
+        <h3>2️⃣ Công ty vừa (3-10 máy):</h3>
+        <pre>👉 Netlify (deploy 1 lần, dùng mãi)
+   Chia sẻ URL cho nhân viên</pre>
+
+        <h3>3️⃣ Cần data sync hoàn toàn:</h3>
+        <pre>👉 Netlify + Firebase
+   Hoặc: VPS riêng + Backend</pre>
+
+        <!-- CTA -->
+        <h2 style="text-align: center; color: #0066cc;">🎉 Lựa Chọn Cách Host Yêu Thích Để Bắt Đầu!</h2>
+
+        <div class="footer">
+            <p><strong>MediPOS v1.0.0</strong> - Hệ Thống Quản Lý Nhà Thuốc</p>
+            <p>Liên hệ support nếu cần tư vấn chi tiết</p>
+        </div>
+    </div>
+</body>
+</html>

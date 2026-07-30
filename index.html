@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Bán Hàng Nhà Thuốc - MediPOS</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='20' width='100' height='100' fill='%230066cc'/><path d='M50,20a30,30 0 1,0 0,60a30,30 0 1,0 0,-60' fill='%23fff'/><path d='M50,35a15,15 0 1,0 0,30a15,15 0 1,0 0,-30' fill='%230066cc'/></svg>">
+    <meta name="theme-color" content="#0066cc">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MediPOS">
+    <meta name="description" content="Hệ thống quản lý bán hàng và ERP cho nhà thuốc - MediPOS - Hiện đại, Trực quan, Dễ sử dụng">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-pills"></i>
+                    <span>MediPOS</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-page="dashboard" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="#" data-page="pos" class="nav-link"><i class="fas fa-cash-register"></i> Bán Hàng</a></li>
+                    <li><a href="#" data-page="inventory" class="nav-link"><i class="fas fa-boxes"></i> Quản Lý Kho</a></li>
+                    <li><a href="#" data-page="customers" class="nav-link"><i class="fas fa-users"></i> Khách Hàng</a></li>
+                    <li><a href="#" data-page="reports" class="nav-link"><i class="fas fa-file-chart-line"></i> Báo Cáo</a></li>
+                    <li><a href="#" data-page="settings" class="nav-link"><i class="fas fa-cog"></i> Cài Đặt</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="exportBtn" class="btn-export" title="Xuất dữ liệu"><i class="fas fa-download"></i></button>
+                <button id="importBtn" class="btn-import" title="Nhập dữ liệu"><i class="fas fa-upload"></i></button>
+                <input type="file" id="importFile" style="display: none;" accept=".json">
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <span id="currentUser">Admin</span>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230066cc'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M12 14c-4 0-6 2-6 4v4h12v-4c0-2-2-4-6-4z'/%3E%3C/svg%3E" alt="User" class="user-avatar">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Page -->
+                <section id="dashboard" class="page active">
+                    <div class="dashboard-grid">
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-icon revenue">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3>Doanh Thu Hôm Nay</h3>
+                                    <p class="stat-value" id="todayRevenue">0 ₫</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon sales">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3>Số Hóa Đơn</h3>
+                                    <p class="stat-value" id="todayTransactions">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon inventory">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3>Sản Phẩm</h3>
+                                    <p class="stat-value" id="totalProducts">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon customers">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3>Khách Hàng</h3>
+                                    <p class="stat-value" id="totalCustomers">0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="charts-container">
+                            <div class="chart-card">
+                                <h3>Doanh Thu 7 Ngày Gần Đây</h3>
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                            <div class="chart-card">
+                                <h3>Sản Phẩm Bán Chạy</h3>
+                                <div id="topProducts" class="top-products-list"></div>
+                            </div>
+                        </div>
+
+                        <div class="alerts-container">
+                            <h3><i class="fas fa-bell"></i> Cảnh Báo</h3>
+                            <div id="alertsList" class="alerts-list"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- POS (Sales) Page -->
+                <section id="pos" class="page">
+                    <div class="pos-container">
+                        <div class="pos-left">
+                            <div class="pos-search">
+                                <input type="text" id="productSearch" placeholder="Tìm sản phẩm, quét mã vạch...">
+                                <button id="scanBtn" class="btn-scan"><i class="fas fa-camera"></i> Quét QR</button>
+                            </div>
+                            <div id="productList" class="product-list"></div>
+                        </div>
+                        <div class="pos-right">
+                            <div class="cart-header">
+                                <h3>Giỏ Hàng</h3>
+                                <button id="clearCartBtn" class="btn-small"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <div id="cartItems" class="cart-items"></div>
+                            <div class="cart-summary">
+                                <div class="summary-row">
+                                    <span>Tổng Tiền:</span>
+                                    <span id="cartTotal">0 ₫</span>
+                                </div>
+                                <div class="summary-row">
+                                    <label>Chiết Khấu (%):</label>
+                                    <input type="number" id="discountPercent" min="0" max="100" value="0" step="1">
+                                </div>
+                                <div class="summary-row">
+                                    <span>Chiết Khấu:</span>
+                                    <span id="discountAmount">0 ₫</span>
+                                </div>
+                                <div class="summary-row grand-total">
+                                    <span>Thành Tiền:</span>
+                                    <span id="grandTotal">0 ₫</span>
+                                </div>
+                                <div class="payment-method">
+                                    <label>Phương Thức:</label>
+                                    <select id="paymentMethod">
+                                        <option value="cash">Tiền Mặt</option>
+                                        <option value="card">Thẻ</option>
+                                        <option value="transfer">Chuyển Khoản</option>
+                                    </select>
+                                </div>
+                                <div id="qrPayment" style="display: none;" class="qr-payment">
+                                    <p>Quét mã QR để thanh toán</p>
+                                    <div id="qrCode" class="qr-code"></div>
+                                </div>
+                                <button id="checkoutBtn" class="btn-checkout">Hoàn Thành Giao Dịch</button>
+                                <button id="printBtn" class="btn-print"><i class="fas fa-print"></i> In Hóa Đơn</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Inventory Management Page -->
+                <section id="inventory" class="page">
+                    <div class="inventory-container">
+                        <div class="inventory-header">
+                            <input type="text" id="inventorySearch" placeholder="Tìm sản phẩm...">
+                            <button id="addProductBtn" class="btn-primary"><i class="fas fa-plus"></i> Thêm Sản Phẩm</button>
+                        </div>
+                        <div id="inventoryTable" class="inventory-table"></div>
+                    </div>
+                </section>
+
+                <!-- Customers Page -->
+                <section id="customers" class="page">
+                    <div class="customers-container">
+                        <div class="customers-header">
+                            <input type="text" id="customerSearch" placeholder="Tìm khách hàng...">
+                            <button id="addCustomerBtn" class="btn-primary"><i class="fas fa-plus"></i> Thêm Khách Hàng</button>
+                        </div>
+                        <div id="customersTable" class="customers-table"></div>
+                    </div>
+                </section>
+
+                <!-- Reports Page -->
+                <section id="reports" class="page">
+                    <div class="reports-container">
+                        <div class="reports-filter">
+                            <label>Khoảng Thời Gian:</label>
+                            <select id="reportPeriod">
+                                <option value="today">Hôm Nay</option>
+                                <option value="week">7 Ngày Qua</option>
+                                <option value="month">Tháng Này</option>
+                                <option value="all">Tất Cả</option>
+                            </select>
+                            <button id="generateReportBtn" class="btn-primary">Tạo Báo Cáo</button>
+                        </div>
+                        <div id="reportsContent" class="reports-content"></div>
+                    </div>
+                </section>
+
+                <!-- Settings Page -->
+                <section id="settings" class="page">
+                    <div class="settings-container">
+                        <div class="settings-group">
+                            <h3>Thông Tin Nhà Thuốc</h3>
+                            <div class="form-group">
+                                <label>Tên Nhà Thuốc:</label>
+                                <input type="text" id="pharmacyName" class="setting-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Địa Chỉ:</label>
+                                <input type="text" id="pharmacyAddress" class="setting-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Số Điện Thoại:</label>
+                                <input type="tel" id="pharmacyPhone" class="setting-input">
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <h3>Cài Đặt Hóa Đơn</h3>
+                            <div class="form-group">
+                                <label>Mã Số Thuế:</label>
+                                <input type="text" id="taxNumber" class="setting-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Số Tài Khoản Ngân Hàng:</label>
+                                <input type="text" id="bankAccount" class="setting-input">
+                            </div>
+                        </div>
+                        <button id="saveSettingsBtn" class="btn-primary">Lưu Cài Đặt</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Product Form -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Thêm Sản Phẩm</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="productForm">
+                <div class="form-group">
+                    <label>Tên Sản Phẩm *</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label>Barcode/SKU:</label>
+                    <input type="text" id="productBarcode">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Giá Nhập:</label>
+                        <input type="number" id="productCostPrice" min="0" step="1000">
+                    </div>
+                    <div class="form-group">
+                        <label>Giá Bán *</label>
+                        <input type="number" id="productPrice" required min="0" step="1000">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Số Lượng Tồn:</label>
+                        <input type="number" id="productQuantity" value="0" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Mức Cảnh Báo:</label>
+                        <input type="number" id="productAlertLevel" value="10" min="0" step="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Thành Phần:</label>
+                    <textarea id="productIngredients" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Công Dụng:</label>
+                    <textarea id="productUses" rows="2"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Hạn Sử Dụng:</label>
+                        <input type="date" id="productExpiry">
+                    </div>
+                    <div class="form-group">
+                        <label>Nhà Sản Xuất:</label>
+                        <input type="text" id="productManufacturer">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="btn-primary">Lưu Sản Phẩm</button>
+                    <button type="button" class="btn-secondary" onclick="closeProductModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Customer Form -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="customerModalTitle">Thêm Khách Hàng</h2>
+                <span class="close" onclick="closeCustomerModal()">&times;</span>
+            </div>
+            <form id="customerForm">
+                <div class="form-group">
+                    <label>Tên Khách Hàng *</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label>Số Điện Thoại:</label>
+                    <input type="tel" id="customerPhone">
+                </div>
+                <div class="form-group">
+                    <label>Địa Chỉ:</label>
+                    <input type="text" id="customerAddress">
+                </div>
+                <div class="form-group">
+                    <label>Điểm Tích Lũy:</label>
+                    <input type="number" id="customerPoints" value="0" min="0">
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="btn-primary">Lưu Khách Hàng</button>
+                    <button type="button" class="btn-secondary" onclick="closeCustomerModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content invoice-modal">
+            <div class="modal-header">
+                <h2>Hóa Đơn Bán Hàng</h2>
+                <span class="close" onclick="closeInvoiceModal()">&times;</span>
+            </div>
+            <div id="invoiceContent" class="invoice-content"></div>
+            <div class="invoice-actions">
+                <button onclick="printInvoice()" class="btn-primary"><i class="fas fa-print"></i> In</button>
+                <button onclick="downloadInvoice()" class="btn-primary"><i class="fas fa-download"></i> Tải Về</button>
+                <button onclick="closeInvoiceModal()" class="btn-secondary">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script src="ui-manager.js"></script>
+    <script src="pos-manager.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
